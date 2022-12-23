@@ -1,0 +1,9 @@
+.selected {
+  background-color: #c70039 !important;
+}
+
+@media (max-width: 767px) {
+  .ant-card .ant-card-body {
+    padding: 2px !important;
+  }
+}
