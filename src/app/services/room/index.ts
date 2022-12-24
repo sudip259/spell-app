@@ -1,24 +1,19 @@
 import service from "../";
-// query: (args) // args => {identifier, params, data}
-const spellApi = service.nepApi.injectEndpoints({
+// inject wishList endpoints with REACT_APP_BASE_URL env
+const spellApi = service.spellApi.injectEndpoints({
   endpoints: (build) => ({
+    // useSpellQuery
     spell: build.query({
       query: () => ({
         url: `/spells`,
         method: "GET",
       }),
     }),
+    // useGetSpellDetailsQuery
     getSpellDetails: build.query({
       query: ({ params }) => ({
         url: `/spells/${params.index}`,
         method: "GET",
-      }),
-    }),
-    addWatchLater: build.mutation({
-      query: ({ data }) => ({
-        url: `/login`,
-        method: "POST",
-        body: data,
       }),
     }),
   }),

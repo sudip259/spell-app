@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Card, Descriptions, Empty, Spin } from "antd";
 
@@ -6,6 +7,7 @@ interface propsTypes {
   detailsLoading: boolean;
 }
 
+// get details in props
 const SpellDetails: React.FC<propsTypes> = ({
   allDetails,
   detailsLoading,
@@ -17,6 +19,7 @@ const SpellDetails: React.FC<propsTypes> = ({
       </Card>
       <Card title={"Higher Level"}>
         <p style={{ textAlign: "justify" }}>
+          {/* render empty component if higher level value is empty */}
           {allDetails?.higher_level.length !== 0 ? (
             allDetails?.higher_level?.join("")
           ) : (

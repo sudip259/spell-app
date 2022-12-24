@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useGetSpellDetailsQuery } from "app/services/room";
 import React, { useState } from "react";
 import { Card, Spin, Table } from "antd";
@@ -19,11 +20,16 @@ const TableView: React.FC<any> = ({
   dataSource,
   isDeleting,
 }) => {
-  const [expandedRowKeys, setExpandedRowKeys] = useState<any>([]); // initially no rows have their accordion panels expanded
-  //
+  // initially no rows have their accordion panels expanded
+  const [expandedRowKeys, setExpandedRowKeys] = useState<any>([]);
+
+  //useDispatch hook is used to dispatch method along with payload and type
   const dispatch = useDispatch<any>();
+
+  // spell index to get detail of spell
   const spellState = useSelector((state: any) => state.room.spell.data);
 
+  // get spell detail by it's index
   const { data: allDetails, isFetching: detailsLoading } =
     useGetSpellDetailsQuery({
       params: {
@@ -31,6 +37,7 @@ const TableView: React.FC<any> = ({
       },
     });
 
+  // accordion clicked
   const handleExpand = (expanded: boolean, record: DataType) => {
     // if the row is being expanded, set the expanded row keys to the key of the expanded row
     // if the row is being collapsed, set the expanded row keys to an empty array

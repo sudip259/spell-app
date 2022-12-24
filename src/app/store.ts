@@ -1,4 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
+
+// With the Redux Persist library, developers can save the Redux store in persistent storage,
+// for example, the local storage.
 import {
   persistReducer,
   FLUSH,
@@ -9,24 +12,25 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+
+// redux toolkit query
 import { setupListeners } from "@reduxjs/toolkit/query";
 import type { Action } from "@reduxjs/toolkit";
 
 import spellReducer, { sliceKey as spellKey } from "./features/room/roomSlice";
 import service from "./services";
 
-// import authReducer, { sliceKey as authKey } from "./features/auth/authSlice";
-
 const appReducer = combineReducers({
   [spellKey]: spellReducer,
-  [service.nepApi.reducerPath]: service.nepApi.reducer,
+  [service.spellApi.reducerPath]: service.spellApi.reducer,
   [service.wishListApi.reducerPath]: service.wishListApi.reducer,
 });
 
 const rootReducer = (state: any, action: Action) => {
-  // console.log(state);
+  // check for action type and clear data storage after logout
+  // but spell list does not have login logout features
+  // so, this feature is added for future purpose
   if (action.type === "auth/logout") {
-    // check for action type
     Object.keys(state).forEach((key) => {
       storage.removeItem(`persist:${key}`);
     });
@@ -42,6 +46,7 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+// configure store
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
@@ -50,7 +55,7 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     })
-      .concat(service.nepApi.middleware)
+      .concat(service.spellApi.middleware)
       .concat(service.wishListApi.middleware),
 });
 

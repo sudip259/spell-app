@@ -1,23 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import type { AxiosError } from "axios";
 
-// Set default header. e.g, X-API-KEY
-// axios.defaults.headers["x-functions-key"] =
-//   "trsmthTaK7p/CS6CSQamg0zB9xxmd9w5COrtM9vS1azadc4sksMYPA==";
-
+// custom axios base query (api call for respective method and return response)
 const axiosBaseQuery = ({ baseUrl }: any) => {
   return async (conf: any) => {
-    let { url, method, body, params } = conf;
+    const { url, method, body, params } = conf;
     try {
+      // api call
       const result = await axios({
         url: baseUrl + url,
         method,
         data: body,
         params,
       });
+      // return success response
       return { data: result.data };
     } catch (axiosError) {
-      let err = axiosError as AxiosError;
+      const err = axiosError as AxiosError;
+      // return error response
       return {
         error: {
           status: err.response?.status,
@@ -27,31 +28,5 @@ const axiosBaseQuery = ({ baseUrl }: any) => {
     }
   };
 };
-// (
-//   { baseUrl }: { baseUrl: string | undefined } = { baseUrl: "" }
-// ): BaseQueryFn<
-//   {
-//     url: string;
-//     method: AxiosRequestConfig["method"];
-//     data?: AxiosRequestConfig["data"];
-//     params?: AxiosRequestConfig["params"];
-//   },
-//   unknown,
-//   unknown
-// > =>
-// async ({ url, method, data, params }) => {
-//   try {
-//     const result = await axios({ url: baseUrl + url, method, data, params });
-//     return { data: result.data };
-//   } catch (axiosError) {
-//     let err = axiosError as AxiosError;
-//     return {
-//       error: {
-//         status: err.response?.status,
-//         data: err.response?.data || err.message,
-//       },
-//     };
-//   }
-// };
 
 export default axiosBaseQuery;

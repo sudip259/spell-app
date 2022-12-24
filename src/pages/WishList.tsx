@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect } from "react";
 import { Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
@@ -13,14 +14,18 @@ interface DataType {
 }
 
 const WishList: React.FC = () => {
+  // get wish list
   const {
     refetch,
     data: wishList,
     isFetching: wishListLoading,
   } = useGetWishQuery({});
+
+  // remove from wishlist
   const [removeWish, { isLoading: removeWishLoading }] =
     useRemoveWishMutation();
 
+  // wishlist table  columns
   const columns: ColumnsType<DataType> = [
     { title: "Name", dataIndex: "name", key: "name" },
     { title: "URL", dataIndex: "url", key: "age" },
@@ -55,6 +60,7 @@ const WishList: React.FC = () => {
     },
   ];
 
+  // refetch api on each page load
   useEffect(() => {
     refetch();
   }, [refetch]);

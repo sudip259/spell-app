@@ -17,6 +17,7 @@ import Typography from "@mui/material/Typography";
 import { Link, useLocation } from "react-router-dom";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
 import RouterView from "routes/route";
+import ErrorBoundary from "components/ErrorBoundry";
 
 const drawerWidth = 240;
 
@@ -35,14 +36,18 @@ const textColorBlack = {
 };
 
 export default function App(props: Props) {
-  let location = useLocation();
+  // useLocation hook for pathname
+  const location = useLocation();
   const { window } = props;
+
+  // state for full view temporary drawer in mobile view
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
+  // open/close drawer in mobile view while clicking on toggle button
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
+  // check if menu is selected in drawer
   const selected = (text: string, index: number) => {
     return (
       location.pathname === "/" + text.toLowerCase().replace(" ", "-") ||
@@ -51,6 +56,10 @@ export default function App(props: Props) {
     );
   };
 
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
+
+  // drawer menus
   const drawer = (
     <div>
       <Toolbar>Spell Management</Toolbar>
@@ -67,21 +76,25 @@ export default function App(props: Props) {
               onClick={() => {
                 setMobileOpen(!mobileOpen);
               }}
+              // change styles of list item if menu is selected
               className={selected(text, index) ? "selected" : ""}
             >
               <ListItemIcon>
                 {index % 2 === 0 ? (
                   <InboxIcon
+                    // change color of icon if menu is selected
                     htmlColor={selected(text, index) ? "white" : "black"}
                   />
                 ) : (
                   <WatchLaterIcon
+                    // change color of icon if menu is selected
                     htmlColor={selected(text, index) ? "white" : "black"}
                   />
                 )}
               </ListItemIcon>
               <ListItemText
                 primaryTypographyProps={
+                  // change color of list item text if menu is selected
                   selected(text, index)
                     ? { style: textColorWhite }
                     : { style: textColorBlack }
@@ -95,16 +108,14 @@ export default function App(props: Props) {
     </div>
   );
 
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
-
   return (
-    <>
+    <ErrorBoundary>
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar
           position="fixed"
           sx={{
+            // calculate width of app bar by substracting drawer width
             width: { sm: `calc(100% - ${drawerWidth}px)` },
             ml: { sm: `${drawerWidth}px` },
           }}
@@ -114,6 +125,7 @@ export default function App(props: Props) {
               color="inherit"
               aria-label="open drawer"
               edge="start"
+              // open close drawer while clicking on hamburger
               onClick={handleDrawerToggle}
               sx={{ mr: 2, display: { sm: "none" } }}
             >
@@ -136,7 +148,7 @@ export default function App(props: Props) {
           sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
           aria-label="mailbox folders"
         >
-          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          {/* mobile view drawer */}
           <Drawer
             container={container}
             variant="temporary"
@@ -155,6 +167,8 @@ export default function App(props: Props) {
           >
             {drawer}
           </Drawer>
+
+          {/* desktop view drawer  */}
           <Drawer
             variant="permanent"
             sx={{
@@ -169,6 +183,8 @@ export default function App(props: Props) {
             {drawer}
           </Drawer>
         </Box>
+
+        {/* container */}
         <Box
           component="main"
           sx={{
@@ -182,6 +198,6 @@ export default function App(props: Props) {
           <RouterView />
         </Box>
       </Box>
-    </>
+    </ErrorBoundary>
   );
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Checkbox, notification } from "antd";
 import { NotificationPlacement } from "antd/es/notification/interface";
 import { useSpellQuery } from "app/services/room";
@@ -16,26 +17,36 @@ interface DataType {
 }
 
 export default function SpellList() {
+  // context holder
   const [api, contextHolder] = notification.useNotification();
+
+  // disable checkbox once it's clicked
   const [loading, setLoading] = useState(false);
 
+  // get spells
   const { refetch, data, isFetching } = useSpellQuery({});
+
+  // reomove wishlist
   const [wishList] = useWishMutation();
 
+  // get wishlist
   const {
     refetch: refetchWish,
     data: wishListData,
     isFetching: wishListFetching,
   } = useGetWishQuery({});
 
+  // refetch wishlist api on each page load
   useEffect(() => {
     refetchWish();
   }, [refetchWish]);
 
+  // refetch spells on each page load
   useEffect(() => {
     refetch();
   }, [refetch]);
 
+  // spells list columns
   const columns: ColumnsType<DataType> = [
     { title: "Name", dataIndex: "name", key: "name" },
     { title: "URL", dataIndex: "url", key: "age" },
@@ -50,14 +61,17 @@ export default function SpellList() {
 
         return (
           <>
+            {/* add to wishlist checkbox */}
             <Checkbox
               style={{ color: "#C70039", fontWeight: "bold" }}
+              // disable checkbox if spell is already added into wish list
               disabled={_.isEqual(filtered?.json_data, record)}
               key={record?.index}
+              // default checked if already added to wishlist
               defaultChecked={_.isEqual(filtered?.json_data, record)}
               onChange={(e) => {
                 setLoading(true);
-                onChangeWatchLater(e, record);
+                onChangeWishList(e, record);
               }}
             >
               Add to wish list
@@ -68,6 +82,7 @@ export default function SpellList() {
     },
   ];
 
+  // display notification funtion
   const openNotification = (placement: NotificationPlacement, res: any) => {
     api.info({
       message: `Notification`,
@@ -82,7 +97,8 @@ export default function SpellList() {
     });
   };
 
-  const onChangeWatchLater = async (e: CheckboxChangeEvent, data: any) => {
+  // add to wishlist if checkbox is selected
+  const onChangeWishList = async (e: CheckboxChangeEvent, data: any) => {
     e.preventDefault();
     try {
       if (e.target.checked) {
@@ -102,6 +118,7 @@ export default function SpellList() {
 
   return (
     <>
+      {/* context holder to display notification  */}
       {contextHolder}
       <TableView
         columns={columns}
