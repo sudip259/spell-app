@@ -14,10 +14,9 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { Link, Route, Routes, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
-import SpellList from "pages/SpellList";
-import WishList from "pages/WishList";
+import RouterView from "routes/route";
 
 const drawerWidth = 240;
 
@@ -68,7 +67,7 @@ export default function App(props: Props) {
               onClick={() => {
                 setMobileOpen(!mobileOpen);
               }}
-              className={selected(text, index) ? "selected" : "test"}
+              className={selected(text, index) ? "selected" : ""}
             >
               <ListItemIcon>
                 {index % 2 === 0 ? (
@@ -173,20 +172,14 @@ export default function App(props: Props) {
         <Box
           component="main"
           sx={{
-            flexGrow: 1,
-            // p: 3,
             backgroundColor: "#eae6e6",
             width: { sm: `calc(100% - ${drawerWidth}px)` },
-            height: "100%",
+            height: "100vh",
+            overflow: "scroll",
           }}
         >
           <Toolbar />
-          <Routes>
-            <Route path="/" element={<SpellList />} />
-            <Route path="/home" element={<SpellList />} />
-            <Route path="/spell-list" element={<SpellList />} />
-            <Route path="/watch-later" element={<WishList />} />
-          </Routes>
+          <RouterView />
         </Box>
       </Box>
     </>
