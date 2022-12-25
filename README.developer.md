@@ -119,3 +119,4 @@ You will also see any lint errors in the console.
 ### Deployment
 
 1. Netlify
+2. PythonAnywhere
